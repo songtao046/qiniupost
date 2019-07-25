@@ -23,7 +23,7 @@ Route::get('testToken', function () {
     $form = <<<FORM
     <form action="/getToken" method="GET">
         <input type="hidden" name="_token" value="{$csrf_token}">
-        <input name="code" type="hidden" value="14138092">
+        <input name="code" type="hidden" value="14138100">
         <input name="type" type="text">
         <input type="submit" value="Test"/>
     </form>
