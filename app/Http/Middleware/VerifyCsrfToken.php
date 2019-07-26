@@ -19,10 +19,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-<<<<<<< HEAD
     	'qiniu/uploadCallback',
-=======
-        'qiniu/uploadCallback',
->>>>>>> c433e1cab99af651b9d616fc946e9146ba5f04ad
     ];
 }
