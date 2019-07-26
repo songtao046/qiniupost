@@ -7,6 +7,7 @@ use Dotenv\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use phpDocumentor\Reflection\Types\Integer;
 use PHPUnit\Util\RegularExpression;
 use Qiniu\Storage\ArgusManager;
@@ -17,40 +18,34 @@ use zgldh\QiniuStorage\QiniuStorage;
 
 
 
-
 class QiniuController extends Controller
 {
     public function getUploadToken(Request $request)
     {
-        //检验code
-        $code = $this->requestValueOfKey($request, 'code', 0);
-        $now = Carbon::now();
-        $current_code = (int)($now->year.$now->month.$now->day);
-        $current_code = $current_code * $now->month + $now->day;
 
-        if ($code != $current_code) {
-            return $this->result('err', '验证失败'.$current_code);
-        }
-
-        //图片类型 avatar cover image
-        $type = $this->requestValueOfKey($request, 'type', 'image');
+        //图片类型 type: avatars-用户头像 covers-小说封面 image-小说链接图片 stamp-表情 card-卡片 book-特集书籍 other-其他
+        $type = $request->has('type') ? $request->input('type') : 'image';
+        $key = '/storage/app/public'.$type.'/'.Str::random(40);
         if ($type == 'avatar') {
-            $callBody =  '{"key":"$(key)","hash":"$(etag)","w":"$(imageInfo.width)", "user_id":"$(x:user_id)"}';
+            $callBody = '{"key":"'.$key.'","hash":"$(etag)","w":"$(imageInfo.width)", "h":"$(imageInfo.height)", "user_id":"$(x:user_id)"}';
         } elseif ($type == 'cover') {
-            $callBody =  '{"key":"$(key)","hash":"$(etag)","w":"$(imageInfo.width)", "novel_id":"$(x:novel_id)"}';
+            $callBody = '{"key":"'.$key.'","hash":"$(etag)","w":"$(imageInfo.width)", "h":"$(imageInfo.height)", "novel_id":"$(x:novel_id)"}';
         } else {
-            $callBody =  '{"key":"$(key)","hash":"$(etag)","w":"$(imageInfo.width)"}';
+            $callBody = '{"key":"'.$key.'","hash":"$(etag)","w":"$(imageInfo.width)", "h":"$(imageInfo.height)"}';
         }
 
-
-        $disk = QiniuStorage::disk("qiniu");
+        $disk = QiniuStorage::disk('qiniu');
         $policy['callbackUrl'] = 'http://35.200.68.27/qiniu/uploadCallback';
         $policy['callbackBody'] = $callBody;
         $policy['callbackBodyType'] = 'application/json';
         $policy['mineLimit'] = 'image/*';
 
         $token = $disk->uploadToken(null, 3600, $policy);
-        return redirect()->route('testPost', ['token' => $token]);
+        return [
+            'status' => 'ok',
+            'token' => $token,
+            'key' => $key,
+        ];
     }
 
 
