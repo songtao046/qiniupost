@@ -59,7 +59,7 @@ return [
             'driver'  => 'qiniu',
             'domains' => [
                 'default'   => 'magnet.holycc.com', //你的七牛域名
-                'https'     => 'magnet.holycc.com',                 //你的HTTPS域名
+                'https'     => '',                 //你的HTTPS域名
                 'custom'    => 'magnet.holycc.com',                //Useless 没啥用，请直接使用上面的 default 项
             ],
             'access_key'=> 'aMarU4280TyakIHt1udQcLs9LwpS6lUhiR3DuNdS',  //AccessKey

@@ -17,7 +17,20 @@ Route::get('/', function () {
 });
 
 
-Route::get('getToken', 'QiniuController@getUploadToken');
+
+
+Route::group(['middleware' => 'cors'], function () {
+
+    Route::get('getToken', 'QiniuController@getUploadToken');
+
+    Route::post('qiniu/uploadCallback', 'QiniuController@uploadCallback');
+
+});
+
+
+
+
+
 
 Route::get('testToken', function () {
     $csrf_token = csrf_token();
@@ -35,7 +48,7 @@ FORM;
 
 Route::get('testPost', ['as' => 'testPost', function (Request $request) {
     $csrf_token = csrf_token();
-   $form = <<<FORM
+    $form = <<<FORM
     <form action="http://up-as0.qiniup.com/" method="POST" enctype="multipart/form-data">
         <input name="x:<user_id>" type="hidden" value="1">
         <input type="hidden" name="_token" value="{$csrf_token}">
@@ -49,4 +62,14 @@ FORM;
 
 }]);
 
-Route::post('/qiniu/uploadCallback', 'QiniuController@uploadCallback');
+Route::get('testCallback', function () {
+    $csrf_token = csrf_token();
+    $form = <<<FORM
+    <form action="/qiniu/uploadCallback" method="POST">
+        <input type="hidden" name="_token" value="{$csrf_token}">
+        <input type="submit" value="上传"/>
+    </form>
+FORM;
+    return $form;
+
+});
