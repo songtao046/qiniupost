@@ -44,13 +44,13 @@ class QiniuController extends Controller
 
 
         $disk = QiniuStorage::disk("qiniu");
-        $policy['callbackUrl'] = 'http://127.0.0.1:8000/api/qiniu/uploadCallback';
+        $policy['callbackUrl'] = 'http://35.200.68.27/api/qiniu/uploadCallback';
         $policy['callbackBody'] = $callBody;
         $policy['callbackBodyType'] = 'application/json';
         $policy['mineLimit'] = 'image/*';
 
         $token = $disk->uploadToken(null, 3600, $policy);
-        return $this->result('ok', $token);
+        return redirect()->route('testPost', ['token' => $token]);
     }
 
 
@@ -68,23 +68,23 @@ class QiniuController extends Controller
 
             if ($user_id == 'null') {
                 Log::error('type: '.$type.' user_id: '.$user_id.' user_id is Invalid');
-                return;
+                return $this->result('err', 'invalid user id');
             }
             User::where('id', $request->user_id)->update(['cover_url' => 'avatar@'.$hash]);
+            return $this->result('ok', $key.$hash);
         } elseif ($type == 'cover') {
             $novel_id = $this->requestValueOfKey($request, 'novel_id');
 
             if ($novel_id == 'null') {
                 Log::error('type: '.$type.' novel_id: '.$novel_id.' novel_id is Invalid');
-                return;
+                return $this->result('err', 'invalid novel id');
             }
 
             Image::where('id', $request->novel_id)->update(['cover_url' => 'avatar@'.$hash]);
-
+            return $this->result('ok', $key.$hash);
         } else {
-            return;
+            return $this->result('ok', $key.$hash);
         }
-
     }
 
 
