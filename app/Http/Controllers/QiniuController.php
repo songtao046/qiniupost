@@ -26,9 +26,9 @@ class QiniuController extends Controller
         //图片类型 type: avatars-用户头像 covers-小说封面 image-小说链接图片 stamp-表情 card-卡片 book-特集书籍 other-其他
         $type = $request->has('type') ? $request->input('type') : 'image';
         $key = '/storage/app/public/'.$type.'/'.Str::random(40);
-        if ($type == 'avatar') {
+        if ($type == 'avatars') {
             $callBody = '{"key":"'.$key.'","hash":"$(etag)","w":"$(imageInfo.width)", "h":"$(imageInfo.height)", "user_id":"$(x:user_id)"}';
-        } elseif ($type == 'cover') {
+        } elseif ($type == 'covers') {
             $callBody = '{"key":"'.$key.'","hash":"$(etag)","w":"$(imageInfo.width)", "h":"$(imageInfo.height)", "novel_id":"$(x:novel_id)"}';
         } else {
             $callBody = '{"key":"'.$key.'","hash":"$(etag)","w":"$(imageInfo.width)", "h":"$(imageInfo.height)"}';
@@ -41,11 +41,12 @@ class QiniuController extends Controller
         $policy['mineLimit'] = 'image/*';
 
         $token = $disk->uploadToken(null, 3600, $policy);
-        return [
-            'status' => 'ok',
-            'token' => $token,
-            'key' => $key,
-        ];
+        return redirect()->route('testPost', ['token' => $token, 'key' => $key]);
+//        return [
+//            'status' => 'ok',
+//            'token' => $token,
+//            'key' => $key,
+//        ];
     }
 
 
@@ -58,7 +59,7 @@ class QiniuController extends Controller
 
         //图片类型 avatar cover image
         $type = $this->requestValueOfKey($request, 'type', 'image');
-        if ($type == 'avatar') {
+        if ($type == 'avatars') {
             $user_id = $this->requestValueOfKey($request, 'user_id');
 
             if ($user_id == 'null') {
@@ -78,7 +79,7 @@ class QiniuController extends Controller
             Image::where('id', $request->novel_id)->update(['cover_url' => 'avatar@'.$hash]);
             return $this->result('ok', $key.$hash);
         } else {
-            return $this->result('ok', $key.$hash);
+            return $this->result('ok', $key.'***'.$hash);
         }
     }
 

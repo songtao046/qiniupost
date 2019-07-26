@@ -58,7 +58,8 @@ Route::get('testPost', ['as' => 'testPost', function (Request $request) {
     $form = <<<FORM
     <form action="http://up-as0.qiniup.com/" method="POST" enctype="multipart/form-data">
         <input name="x:<user_id>" type="hidden" value="1">
-        <input name="token" type="hidden" value="{$request->input('token')}">
+        <input name="token" value="{$request->input('token')}">
+        <input name="key" value="{$request->input('key')}">
         <input name="file" type="file">
         <br>
         <input type="submit" value="上传"/>
