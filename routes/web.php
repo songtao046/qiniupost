@@ -25,6 +25,16 @@ Route::group(['middleware' => 'cors'], function () {
 
     Route::post('qiniu/uploadCallback', 'QiniuController@uploadCallback');
 
+
+    Route::get('testCallback', function () {
+        $form = <<<FORM
+    <form action="http://35.200.68.27/qiniu/uploadCallback" method="POST">
+        <input type="submit" value="上传"/>
+    </form>
+FORM;
+        return $form;
+
+    });
 });
 
 
@@ -33,10 +43,8 @@ Route::group(['middleware' => 'cors'], function () {
 
 
 Route::get('testToken', function () {
-    $csrf_token = csrf_token();
     $form = <<<FORM
     <form action="/getToken" method="GET">
-        <input type="hidden" name="_token" value="{$csrf_token}">
         <input name="code" type="hidden" value="14138108">
         <input name="type" type="text">
         <input type="submit" value="Test"/>
@@ -47,11 +55,9 @@ FORM;
 
 
 Route::get('testPost', ['as' => 'testPost', function (Request $request) {
-    $csrf_token = csrf_token();
     $form = <<<FORM
     <form action="http://up-as0.qiniup.com/" method="POST" enctype="multipart/form-data">
         <input name="x:<user_id>" type="hidden" value="1">
-        <input type="hidden" name="_token" value="{$csrf_token}">
         <input name="token" type="hidden" value="{$request->input('token')}">
         <input name="file" type="file">
         <br>
@@ -62,14 +68,3 @@ FORM;
 
 }]);
 
-Route::get('testCallback', function () {
-    $csrf_token = csrf_token();
-    $form = <<<FORM
-    <form action="/qiniu/uploadCallback" method="POST">
-        <input type="hidden" name="_token" value="{$csrf_token}">
-        <input type="submit" value="上传"/>
-    </form>
-FORM;
-    return $form;
-
-});
