@@ -65,7 +65,7 @@ return [
             'access_key'=> 'aMarU4280TyakIHt1udQcLs9LwpS6lUhiR3DuNdS',  //AccessKey
             'secret_key'=> '_JKX_i94zrsFcYhgzCYN1aQYI1qeBKioG5dHXINH',  //SecretKey
             'bucket'    => 'magnet',  //Bucket名字
-            'notify_url'=> 'http://magnet.holycc.com/qiniu/callback',  //持久化处理回调地址
+            'notify_url'=> 'http://35.200.68.27/qiniu/callback',  //持久化处理回调地址
             'access'    => 'public',  //空间访问控制 public 或 private
             'hotlink_prevention_key' => '', // CDN 时间戳防盗链的 key。 设置为 null 则不启用本功能。
 //            'hotlink_prevention_key' => 'cbab68a279xxxxxxxxxxab509a', // 同上，备用

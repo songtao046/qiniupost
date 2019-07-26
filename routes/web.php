@@ -34,9 +34,11 @@ FORM;
 
 
 Route::get('testPost', ['as' => 'testPost', function (Request $request) {
+    $csrf_token = csrf_token();
    $form = <<<FORM
     <form action="http://up-as0.qiniup.com/" method="POST" enctype="multipart/form-data">
         <input name="x:<user_id>" type="hidden" value="1">
+        <input type="hidden" name="_token" value="{$csrf_token}">
         <input name="token" type="hidden" value="{$request->input('token')}">
         <input name="file" type="file">
         <br>
