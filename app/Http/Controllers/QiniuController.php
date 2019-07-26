@@ -44,7 +44,7 @@ class QiniuController extends Controller
 
 
         $disk = QiniuStorage::disk("qiniu");
-        $policy['callbackUrl'] = 'http://35.200.68.27/api/qiniu/uploadCallback';
+        $policy['callbackUrl'] = 'http://35.200.68.27/qiniu/uploadCallback';
         $policy['callbackBody'] = $callBody;
         $policy['callbackBodyType'] = 'application/json';
         $policy['mineLimit'] = 'image/*';
