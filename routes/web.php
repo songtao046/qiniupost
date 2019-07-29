@@ -26,6 +26,13 @@ Route::group(['middleware' => 'cors'], function () {
     Route::post('qiniu/uploadCallback', 'QiniuController@uploadCallback');
 
 
+    Route::get('showImage', function (Request $request) {
+        $html = <<<FORM
+        <img src="magnet.holycc.com/{$request->input('key')}">
+FORM;
+        return $html;
+    });
+
     Route::get('testCallback', function () {
         $form = <<<FORM
     <form action="http://35.200.68.27/qiniu/uploadCallback" method="POST">

@@ -25,7 +25,7 @@ class QiniuController extends Controller
 
         //图片类型 type: avatars-用户头像 covers-小说封面 image-小说链接图片 stamp-表情 card-卡片 book-特集书籍 other-其他
         $type = $request->has('type') ? $request->input('type') : 'image';
-        $key = '/storage/app/public/'.$type.'/'.Str::random(40);
+        $key = 'storage/app/public/'.$type.'/'.Str::random(40);
         if ($type == 'avatars') {
             $callBody = '{"key":"'.$key.'","hash":"$(etag)","w":"$(imageInfo.width)", "h":"$(imageInfo.height)", "user_id":"$(x:user_id)"}';
         } elseif ($type == 'covers') {
@@ -67,7 +67,8 @@ class QiniuController extends Controller
                 return $this->result('err', 'invalid user id');
             }
             User::where('id', $request->user_id)->update(['cover_url' => 'avatar@'.$hash]);
-            return $this->result('ok', $key.$hash);
+            return redirect()->route('showImage', ['key' => $key]);
+//            return $this->result('ok', $key.$hash);
         } elseif ($type == 'cover') {
             $novel_id = $this->requestValueOfKey($request, 'novel_id');
 
@@ -77,10 +78,14 @@ class QiniuController extends Controller
             }
 
             Image::where('id', $request->novel_id)->update(['cover_url' => 'avatar@'.$hash]);
-            return $this->result('ok', $key.$hash);
+            return redirect()->route('showImage', ['key' => $key]);
+//            return $this->result('ok', $key.$hash);
         } else {
-            return $this->result('ok', $key.'***'.$hash);
+            return redirect()->route('showImage', ['key' => $key]);
+//            return $this->result('ok', $key.'***'.$hash);
         }
+
+
     }
 
 
